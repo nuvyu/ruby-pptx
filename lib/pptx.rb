@@ -47,12 +47,6 @@ module PPTX
         @parts ||= Hash[default_part_names.map {|fn| [fn, nil]}]
       end
 
-      def default_directories
-        @default_directories ||= Dir.glob(File.join(@base, '**/*'))
-                                     .keep_if {|fn| File.directory?(fn)}
-                                     .map     {|fn| fn[(@base.length)..-1][1..-1]}
-      end
-
       def default_part_names
         @default_part_names ||= Dir.glob(File.join(@base, '**/*'), File::FNM_DOTMATCH)
                                    .reject {|fn| File.directory?(fn) }
@@ -79,21 +73,14 @@ module PPTX
       def to_zip
         buffer = ::StringIO.new('')
 
-
-        entries = parts.map { |n, c| [n, c] } + default_directories.map {|d| [d + '/', nil]}
-        sorted_entries = entries.sort
-
         Zip::OutputStream.write_buffer(buffer) do |out|
-          sorted_entries.each do |name, content|
-
-            # FIXME
-            unless name.end_with? '/'
-              out.put_next_entry name
-              content ||= part(name)
-              out.write content
-            end
+          parts.each do |name, content|
+            out.put_next_entry name
+            content ||= part(name)
+            out.write content
           end
         end
+
         buffer.string
       end
     end
