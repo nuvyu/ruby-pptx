@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+    <Relationship Id="rId7" Target="slides/slide1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide"/>
+    <Relationship Id="rId6" Target="tableStyles.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/tableStyles"/>
+    <Relationship Id="rId5" Target="theme/theme1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme"/>
+    <Relationship Id="rId4" Target="viewProps.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/viewProps"/>
+    <Relationship Id="rId3" Target="presProps.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/presProps"/>
+    <Relationship Id="rId2" Target="printerSettings/printerSettings1.bin" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/printerSettings"/>
+    <Relationship Id="rId1" Target="slideMasters/slideMaster1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster"/>
+</Relationships>

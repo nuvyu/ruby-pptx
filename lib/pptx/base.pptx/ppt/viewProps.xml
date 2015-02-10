@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<p:viewPr lastView="sldThumbnailView" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+    <p:normalViewPr>
+        <p:restoredLeft sz="15620"/>
+        <p:restoredTop sz="94660"/>
+    </p:normalViewPr>
+    <p:slideViewPr>
+        <p:cSldViewPr snapToGrid="0" snapToObjects="1">
+            <p:cViewPr varScale="1">
+                <p:scale>
+                    <a:sx d="100" n="124"/>
+                    <a:sy d="100" n="124"/>
+                </p:scale>
+                <p:origin x="-1512" y="-112"/>
+            </p:cViewPr>
+            <p:guideLst>
+                <p:guide orient="horz" pos="2160"/>
+                <p:guide pos="2880"/>
+            </p:guideLst>
+        </p:cSldViewPr>
+    </p:slideViewPr>
+    <p:notesTextViewPr>
+        <p:cViewPr>
+            <p:scale>
+                <a:sx d="100" n="100"/>
+                <a:sy d="100" n="100"/>
+            </p:scale>
+            <p:origin x="0" y="0"/>
+        </p:cViewPr>
+    </p:notesTextViewPr>
+    <p:gridSpacing cx="76200" cy="76200"/>
+</p:viewPr>
