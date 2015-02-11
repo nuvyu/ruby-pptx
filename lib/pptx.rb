@@ -14,8 +14,10 @@ require_relative 'pptx/slide'
 # * Base presentation is trusted. Nothing is done to prevent directory traversal.
 # If you wanted to open arbitrary presentation, you'd have to make sure to no longer make these.
 module PPTX
+  DRAWING_NS = 'http://schemas.openxmlformats.org/drawingml/2006/main'
   DOC_RELATIONSHIP_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
   RELTYPE_SLIDE = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide'
+  CM = 360000  # 1 centimeter in OpenXML EMUs
 end
 
 
@@ -30,6 +32,19 @@ def main
   # pkg.parts['docProps/app.xml'] = app.to_s
 
   slide = PPTX::Slide.new(pkg, 'ppt/slides/slide2.xml')
+
+  text = "Text box text\n:)\nwith<stuff>&to<be>escaped\nYay!"
+
+  tree = slide.shape_tree_xml
+
+  # Remove existing pictures
+  tree.xpath('./p:pic').each do |pic|
+    pic.unlink
+  end
+
+  slide.add_textbox(2 * PPTX::CM, 2*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM, text)
+
+  puts tree.to_s
 
   presentation = pkg.presentation
   presentation.add_slide(slide)
