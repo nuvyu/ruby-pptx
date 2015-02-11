@@ -1,5 +1,7 @@
 module PPTX
   class Presentation < OPC::Part
+    NS = 'http://schemas.openxmlformats.org/presentationml/2006/main'
+
     def initialize(package, part_name)
       super(package, part_name)
     end
@@ -24,7 +26,7 @@ module PPTX
     end
 
     def slide_list_xml
-      @slide_list_xml ||= doc.xpath('/p:presentation/p:sldIdLst', p: PRESENTATION_NS).first
+      @slide_list_xml ||= doc.xpath('/p:presentation/p:sldIdLst', p: NS).first
     end
   end
 end

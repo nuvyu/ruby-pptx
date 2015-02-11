@@ -14,8 +14,7 @@ require_relative 'pptx/slide'
 # * Base presentation is trusted. Nothing is done to prevent directory traversal.
 # If you wanted to open arbitrary presentation, you'd have to make sure to no longer make these.
 module PPTX
-  RELATIONSHIP_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
-  PRESENTATION_NS = 'http://schemas.openxmlformats.org/presentationml/2006/main'
+  DOC_RELATIONSHIP_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
   RELTYPE_SLIDE = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide'
 end
 
