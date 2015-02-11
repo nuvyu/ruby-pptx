@@ -169,10 +169,6 @@ module PPTX
       end
     end
 
-    class Relationships < BasePart
-
-    end
-
     class ContentTypes < BasePart
       def set_override(part_name, value)
         type_list = doc.xpath('c:Types', c: CONTENTTYPE_NS).first
@@ -183,6 +179,24 @@ module PPTX
           type_list.add_child(override)
         end
         override['ContentType'] = value
+      end
+    end
+
+    class Relationships < BasePart
+      def add(relative_part_name, type)
+        ref_id = "rId#{SecureRandom.hex(10)}"
+
+        relationship = Nokogiri::XML::Node.new('Relationship', doc)
+        relationship['Id'] = ref_id
+        relationship['Target'] = relative_part_name
+        relationship['Type'] = type
+        list_xml.add_child(relationship)
+
+        ref_id
+      end
+
+      def list_xml
+        @list_xml ||= doc.xpath('r:Relationships', r: OPC::RELATIONSHIP_NS).first
       end
     end
   end
@@ -197,34 +211,17 @@ module PPTX
     end
 
     def add_slide(slide)
-      slide_list = slide_list_xml
-      ref_id = "rId#{SecureRandom.hex(10)}"
-      # slide_part_name = 'slides/slide1.xml'
-
       # TODO remove me - remove existing slide from template
-      # slide_list.xpath('./p:sldId').each do |slide|
+      # slide_list_xml.xpath('./p:sldId').each do |slide|
       #   slide_list.children.delete(slide)
       # end
+      ref_id = relationships.add(relative_part_name(slide.part_name), RELTYPE_SLIDE)
 
       # add slide to sldIdList in presentation
       slide_id = Nokogiri::XML::Node.new('p:sldId', doc)
       slide_id['id'] = next_slide_id
       slide_id['r:id'] = ref_id
-      slide_list.add_child(slide_id)
-
-      # add slide to presentation relationships, but first clear existing slides
-      relationship_list = relationships.doc.xpath('r:Relationships', r: OPC::RELATIONSHIP_NS).first
-
-      # TODO remove me - remove existing slide from template
-      # relationship_list.xpath("./xmlns:Relationship[@Type='#{RELTYPE_SLIDE}']").each do |r|
-      #   relationship_list.children.delete(r)
-      # end
-      relationship = Nokogiri::XML::Node.new('Relationship', doc)
-      relationship['Id'] = ref_id
-
-      relationship['Target'] = relative_part_name(slide.part_name)
-      relationship['Type'] = RELTYPE_SLIDE
-      relationship_list.add_child(relationship)
+      slide_list_xml.add_child(slide_id)
     end
 
     def next_slide_id
@@ -233,7 +230,7 @@ module PPTX
     end
 
     def slide_list_xml
-      doc.xpath('/p:presentation/p:sldIdLst', p: PRESENTATION_NS).first
+      @slide_list_xml ||= doc.xpath('/p:presentation/p:sldIdLst', p: PRESENTATION_NS).first
     end
   end
 
