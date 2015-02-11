@@ -136,7 +136,7 @@ module PPTX
 
     def add_slide(slide)
       slide_list = slide_list_xml
-      ref_id = 'rId8'
+      ref_id = "rId#{SecureRandom.hex(10)}"
       # slide_part_name = 'slides/slide1.xml'
 
       # TODO remove me - remove existing slide from template
