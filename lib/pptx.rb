@@ -18,6 +18,7 @@ module PPTX
   DOC_RELATIONSHIP_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
   RELTYPE_SLIDE = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide'
   CM = 360000  # 1 centimeter in OpenXML EMUs
+  POINT = 100  # font size point
 end
 
 
@@ -42,7 +43,9 @@ def main
     pic.unlink
   end
 
-  slide.add_textbox(2 * PPTX::CM, 2*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM, text)
+  slide.add_textbox(14*PPTX::CM, 6*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM, text)
+  slide.add_textbox(2*PPTX::CM, 1*PPTX::CM, 22*PPTX::CM, 3*PPTX::CM,
+                    'Title :)', sz: 45*PPTX::POINT)
 
   puts tree.to_s
 

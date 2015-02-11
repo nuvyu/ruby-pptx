@@ -8,8 +8,15 @@ module PPTX
       'application/vnd.openxmlformats-officedocument.presentationml.slide+xml'
     end
 
+    # Add a text box at the given position with the given dimensions
+    #
     # Pass distance values in EMUs (use PPTX::CM)
-    def add_textbox(x, y, width, height, content, formatting=nil)
+    # Formatting values a are raw OOXML Text Run Properties (rPr) element
+    # attributes. Examples:
+    # * sz: font size (use PPTX::POINT)
+    # * b: 1 for bold
+    # * i: 1 for italic
+    def add_textbox(x, y, width, height, content, formatting={})
       x, y, width, height = x.to_i, y.to_i, width.to_i, height.to_i
 
       # TODO Find out whether some of these ids have to be fixed, e.g. CNvPr id
@@ -55,6 +62,11 @@ module PPTX
       content.split("\n").each do |line|
         par_node = Nokogiri::XML::DocumentFragment.parse(paragraph_xml)
         par_node.xpath('./a:p/a:r/a:t', a: DRAWING_NS).first.tap { |tn| tn.content = line }
+        par_node.xpath('./a:p/a:r/a:rPr', a: DRAWING_NS).first.tap do |rpr|
+          formatting.each do |key, val|
+            rpr[key] = val
+          end
+        end
         txbody_node.add_child par_node
       end
 
