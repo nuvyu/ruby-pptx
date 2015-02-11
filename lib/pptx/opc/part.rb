@@ -1,3 +1,5 @@
+require 'pathname'
+
 module PPTX
   module OPC
     # A part without relationships.
@@ -40,7 +42,9 @@ module PPTX
       end
 
       def relative_part_name(name)
-        name[File.dirname(part_name).size + 1..-1]
+        source = Pathname.new(File.dirname(part_name))
+        target = Pathname.new(name)
+        target.relative_path_from(source).to_s
       end
 
       def relationships

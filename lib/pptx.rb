@@ -16,6 +16,7 @@ require_relative 'pptx/slide'
 module PPTX
   DRAWING_NS = 'http://schemas.openxmlformats.org/drawingml/2006/main'
   DOC_RELATIONSHIP_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
+  RELTYPE_IMAGE = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image'
   RELTYPE_SLIDE = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide'
   CM = 360000  # 1 centimeter in OpenXML EMUs
   POINT = 100  # font size point
@@ -43,9 +44,15 @@ def main
     pic.unlink
   end
 
-  slide.add_textbox(14*PPTX::CM, 6*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM, text)
-  slide.add_textbox(2*PPTX::CM, 1*PPTX::CM, 22*PPTX::CM, 3*PPTX::CM,
+  slide.add_textbox([14*PPTX::CM, 6*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM],
+                    text)
+  slide.add_textbox([2*PPTX::CM, 1*PPTX::CM, 22*PPTX::CM, 3*PPTX::CM],
                     'Title :)', sz: 45*PPTX::POINT)
+
+  File.open('spec/fixtures/files/test_photo.jpg', 'r') do |image|
+    slide.add_picture([2 * PPTX::CM, 5*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM],
+                    'photo.jpg', image)
+  end
 
   puts tree.to_s
 

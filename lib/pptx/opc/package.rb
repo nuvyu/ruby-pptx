@@ -53,7 +53,7 @@ module PPTX
         end
       end
 
-      def set_part(name, obj, content_type)
+      def set_part(name, obj, content_type = nil)
         parts[name] = obj
         if content_type
           content_types.set_override(name, content_type)
