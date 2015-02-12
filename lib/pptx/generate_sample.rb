@@ -9,7 +9,7 @@ require_relative '../pptx'
 
 def main
   pkg = PPTX::OPC::Package.new
-  slide = PPTX::Slide.new(pkg, 'ppt/slides/slide2.xml')
+  slide = PPTX::Slide.new(pkg)
 
   # Remove existing pictures
   tree = slide.shape_tree_xml

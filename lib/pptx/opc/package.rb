@@ -53,6 +53,15 @@ module PPTX
         end
       end
 
+      # Used e.g. for creating slides with proper numbering (i.e. slide1.xml, slide2.xml)
+      def next_part_with_prefix(prefix, suffix)
+        num = parts.select { |n, _| n.start_with?(prefix) && n.end_with?(suffix) }
+                   .map { |n, _| n[prefix.length..-1][0..-(suffix.size + 1)].to_i }
+                   .max
+        num = (num || 0) + 1
+        "#{prefix}#{num}#{suffix}"
+      end
+
       def set_part(name, obj, content_type = nil)
         parts[name] = obj
         if content_type

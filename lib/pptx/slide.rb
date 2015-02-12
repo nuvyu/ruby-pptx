@@ -2,7 +2,8 @@ require 'securerandom'
 
 module PPTX
   class Slide < OPC::Part
-    def initialize(package, part_name)
+    def initialize(package)
+      part_name = package.next_part_with_prefix('ppt/slides/slide', '.xml')
       super(package, part_name, 'ppt/slides/slide1.xml')
     end
 
