@@ -7,6 +7,7 @@ Bundler.setup(:default, 'development')
 require_relative 'pptx/opc'
 require_relative 'pptx/presentation'
 require_relative 'pptx/slide'
+require_relative 'pptx/shapes'
 
 # Assumptions
 # * XML namespace prefixes remain the same as in template
