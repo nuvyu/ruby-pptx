@@ -11,12 +11,6 @@ def main
   pkg = PPTX::OPC::Package.new
   slide = PPTX::Slide.new(pkg)
 
-  # Remove existing pictures
-  tree = slide.shape_tree_xml
-  tree.xpath('./p:pic').each do |pic|
-    pic.unlink
-  end
-
   slide.add_textbox([14*PPTX::CM, 6*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM],
                     "Text box text\n:)\nwith<stuff>&to<be>escaped\nYay!")
   slide.add_textbox([2*PPTX::CM, 1*PPTX::CM, 22*PPTX::CM, 3*PPTX::CM],
