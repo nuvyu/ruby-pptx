@@ -5,6 +5,13 @@ module PPTX
     class Relationships < BasePart
       NS = 'http://schemas.openxmlformats.org/package/2006/relationships'
 
+      def base_xml
+        '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+          <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+          </Relationships>
+        '''
+      end
+
       def add(relative_part_name, type)
         ref_id = "rId#{SecureRandom.hex(10)}"
 

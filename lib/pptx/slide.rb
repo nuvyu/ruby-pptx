@@ -4,7 +4,30 @@ module PPTX
   class Slide < OPC::Part
     def initialize(package)
       part_name = package.next_part_with_prefix('ppt/slides/slide', '.xml')
-      super(package, part_name, 'ppt/slides/slide1.xml')
+      super(package, part_name)
+      relationships.add('../slideLayouts/slideLayout7.xml', RELTYPE_SLIDE_LAYOUT)
+    end
+
+    def base_xml
+      '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+               xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"
+               xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+            <p:cSld>
+                <p:spTree>
+                    <p:nvGrpSpPr>
+                        <p:cNvPr id="1" name=""/>
+                        <p:cNvGrpSpPr/>
+                        <p:nvPr/>
+                    </p:nvGrpSpPr>
+                    <p:grpSpPr/>
+                </p:spTree>
+            </p:cSld>
+            <p:clrMapOvr>
+                <a:masterClrMapping/>
+            </p:clrMapOvr>
+        </p:sld>
+        '''
     end
 
     def content_type

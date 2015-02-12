@@ -13,6 +13,8 @@ module PPTX
   DOC_RELATIONSHIP_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
   RELTYPE_IMAGE = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image'
   RELTYPE_SLIDE = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide'
+  RELTYPE_SLIDE_LAYOUT =
+    'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout'
   CM = 360000  # 1 centimeter in OpenXML EMUs
   POINT = 100  # font size point
 end

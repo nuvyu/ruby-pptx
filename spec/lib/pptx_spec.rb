@@ -32,14 +32,31 @@ describe 'PPTX' do
       @zip_data = pkg.to_zip
     end
 
-    let(:zip) do
-      io = StringIO.new(@zip_data)
-      Zip::File.new(io, true, true).tap {|z| z.read_from_stream(io) }
+
+    # The following suddenly fails for unknown reasons.
+    # Error also described here:
+    # * https://github.com/rubyzip/rubyzip/issues/177
+    # * https://github.com/rubyzip/rubyzip/issues/199
+    # let(:zip) do
+    #   io = StringIO.new(@zip_data)
+    #   Zip::File.new(io, true, true).tap {|z| z.read_from_stream(io) }
+    # end
+    # let(:slide) { Nokogiri::XML(zip.read('ppt/slides/slide1.xml')) }
+    # let(:slide_refs) { Nokogiri::XML(zip.read('ppt/slides/_rels/slide1.xml.rels')) }
+
+    # This works around the problems:
+    let(:zip_files) do
+      zip_files = {}
+      input_stream = Zip::InputStream.open(StringIO.new(@zip_data))
+      while entry = input_stream.get_next_entry
+        zip_files[entry.name] = entry.get_input_stream.read()
+      end
+      zip_files
     end
 
-    let(:slide) { Nokogiri::XML(zip.read('ppt/slides/slide2.xml')) }
+    let(:slide) { Nokogiri::XML(zip_files['ppt/slides/slide1.xml']) }
 
-    let(:slide_refs) { Nokogiri::XML(zip.read('ppt/slides/_rels/slide2.xml.rels')) }
+    let(:slide_refs) { Nokogiri::XML(zip_files['ppt/slides/_rels/slide1.xml.rels']) }
 
     let(:shape_tree) do
       slide.xpath('/p:sld/p:cSld/p:spTree', a:PPTX::DRAWING_NS, p:PPTX::Presentation::NS)
@@ -84,7 +101,7 @@ describe 'PPTX' do
       expect(image_part_ref).to end_with('.jpg')
 
       image_part = Pathname.new('ppt/slides/').join(image_part_ref).cleanpath.to_s
-      expect(zip.read(image_part).size). to be > 0
+      expect(zip_files[image_part].size). to be > 0
     end
   end
 end

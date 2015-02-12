@@ -1,6 +1,7 @@
 module PPTX
   class Presentation < OPC::Part
     NS = 'http://schemas.openxmlformats.org/presentationml/2006/main'
+    MIN_SLIDE_ID = 256
 
     def initialize(package, part_name)
       super(package, part_name)
@@ -22,7 +23,7 @@ module PPTX
 
     def next_slide_id
       ids = slide_list_xml.xpath('./p:sldId').map { |sid| sid['id'].to_i }
-      return ids.max + 1
+      return (ids.max || MIN_SLIDE_ID - 1) + 1
     end
 
     def slide_list_xml
