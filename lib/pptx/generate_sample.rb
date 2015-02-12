@@ -29,6 +29,9 @@ def main
 
   pkg.presentation.add_slide(slide)
 
+  slide2 = PPTX::Slide.new(pkg)
+  pkg.presentation.add_slide(slide2)
+
   File.open('tmp/generated.pptx', 'wb') {|f| f.write(pkg.to_zip) }
 end
 

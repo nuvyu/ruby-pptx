@@ -20,7 +20,7 @@ module PPTX
       end
 
       def content_types
-        @content_types = ContentTypes.new(self, '[Content_Types].xml')
+        @content_types ||= ContentTypes.new(self, '[Content_Types].xml')
       end
 
       def has_part?(name)
