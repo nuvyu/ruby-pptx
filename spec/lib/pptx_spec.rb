@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+require 'pathname'
 require 'pptx'
 require 'stringio'
 require 'zip'
@@ -38,6 +39,8 @@ describe 'PPTX' do
 
     let(:slide) { Nokogiri::XML(zip.read('ppt/slides/slide2.xml')) }
 
+    let(:slide_refs) { Nokogiri::XML(zip.read('ppt/slides/_rels/slide2.xml.rels')) }
+
     let(:shape_tree) do
       slide.xpath('/p:sld/p:cSld/p:spTree', a:PPTX::DRAWING_NS, p:PPTX::Presentation::NS)
            .first
@@ -64,10 +67,24 @@ describe 'PPTX' do
       expect(textboxes[1].xpath('./a:p/a:r/a:t').first.content).to eql 'Title :)'
     end
 
-    it 'contains an image' do
+    it 'contains a reference to an image and the image itself' do
       pictures = shape_tree.xpath('./p:pic/p:blipFill/a:blip')
 
       expect(pictures.size).to eql(1)
+
+      ref_id = pictures.first['r:embed']
+      expect(ref_id).to start_with('rId')
+
+      rels = slide_refs.xpath("/r:Relationships/r:Relationship[@Id='#{ref_id}']",
+                              r: PPTX::OPC::Relationships::NS)
+      expect(rels.size).to eq(1)
+
+      image_part_ref = rels.first['Target']
+      expect(image_part_ref).to start_with('../media/image-')
+      expect(image_part_ref).to end_with('.jpg')
+
+      image_part = Pathname.new('ppt/slides/').join(image_part_ref).cleanpath.to_s
+      expect(zip.read(image_part).size). to be > 0
     end
   end
 end
