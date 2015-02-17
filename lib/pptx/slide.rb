@@ -35,9 +35,8 @@ module PPTX
     end
 
     def add_picture(transform, name, image)
-      image_name = "ppt/media/image-#{SecureRandom.hex(10)}#{File.extname(name)}"
-      @package.set_part(image_name, image.read)
-      rid = relationships.add(relative_part_name(image_name), PPTX::RELTYPE_IMAGE)
+      # TODO do something with name or remove
+      rid = relationships.add(relative_part_name(image.part_name), PPTX::RELTYPE_IMAGE)
 
       shape = Shapes::Picture.new(transform, rid)
       shape_tree_xml.add_child(shape.build_node)

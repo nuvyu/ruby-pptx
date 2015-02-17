@@ -16,10 +16,9 @@ def main
   slide.add_textbox([2*PPTX::CM, 1*PPTX::CM, 22*PPTX::CM, 3*PPTX::CM],
                     'Title :)', sz: 45*PPTX::POINT)
 
-  File.open('spec/fixtures/files/test_photo.jpg', 'r') do |image|
-    slide.add_picture([2 * PPTX::CM, 5*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM],
-                    'photo.jpg', image)
-  end
+  image = PPTX::OPC::FilePart.new(pkg, 'spec/fixtures/files/test_photo.jpg')
+  slide.add_picture([2 * PPTX::CM, 5*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM],
+                  'photo.jpg', image)
 
   pkg.presentation.add_slide(slide)
 

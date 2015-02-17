@@ -16,10 +16,9 @@ describe 'PPTX' do
       slide.add_textbox([2*PPTX::CM, 1*PPTX::CM, 22*PPTX::CM, 3*PPTX::CM],
                         'Title :)', sz: 45*PPTX::POINT)
 
-      File.open('spec/fixtures/files/test_photo.jpg', 'r') do |image|
-        slide.add_picture([2 * PPTX::CM, 5*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM],
-                        'photo.jpg', image)
-      end
+      image = PPTX::OPC::FilePart.new(pkg, 'spec/fixtures/files/test_photo.jpg')
+      slide.add_picture([2 * PPTX::CM, 5*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM],
+                      'photo.jpg', image)
 
       pkg.presentation.add_slide(slide)
 
@@ -95,7 +94,7 @@ describe 'PPTX' do
         expect(rels.size).to eq(1)
 
         image_part_ref = rels.first['Target']
-        expect(image_part_ref).to start_with('../media/image-')
+        expect(image_part_ref).to start_with('../media/binary-')
         expect(image_part_ref).to end_with('.jpg')
 
         image_part = Pathname.new('ppt/slides/').join(image_part_ref).cleanpath.to_s

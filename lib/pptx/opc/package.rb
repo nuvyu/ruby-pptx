@@ -97,9 +97,15 @@ module PPTX
           fake_stream = Zipline::FakeStream.new(&block)
           Zipline::OutputStream.open(fake_stream) do |zip|
             @pkg.instance_variable_get(:@parts).each do |name, _|
-              data = @pkg.marshal_part(name)
-              zip.put_next_entry name, data.size
-              zip << data
+              part = @pkg.part(name)
+              if part.respond_to?(:stream) && part.respond_to?(:size)
+                zip.put_next_entry name, part.size
+                part.stream zip
+              else
+                data = @pkg.marshal_part(name)
+                zip.put_next_entry name, data.size
+                zip << data
+              end
             end
           end
         end
