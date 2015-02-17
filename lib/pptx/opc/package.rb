@@ -31,6 +31,12 @@ module PPTX
         @parts[name]
       end
 
+      # Returns a Hash of name -> Part
+      # Do not modify the hash directly, but use set_part.
+      def parts
+        @parts
+      end
+
       def template_part(name)
         file = File.join(@base, name)
         IO.read(file) if File.exist? file
@@ -72,47 +78,15 @@ module PPTX
         @presentation ||= PPTX::Presentation.new(self, 'ppt/presentation.xml')
       end
 
-      class ZipStreamer
-        def initialize(pkg)
-          @pkg = pkg
-        end
-
-        # This method uses parts of zipline to implement streaming.
-        #
-        # This is how Zipline usually works:
-        # * Rails calls response_body.each
-        # * response_body is Zipline::ZipGenerator, it creates a Zipline::FakeStream with the
-        #   block given to each
-        # * The FakeStream is used as output for ZipLine::OutputStream (which inherits
-        #   from Zip::OutputStream)
-        # * ZipGenerator goes through files and calls write_file on the OutputStream for each file
-        # * OutputStream writes the data as String to FakeStream via the << method
-        # * FakeStream yields the String to the block given by Rails
-        #
-        # This method uses Zipline's FakeStream and OutputStream, but writes the entries
-        # to the zip file on it's own, so we can write data for a file in multiple steps
-        # and don't have to rely on Zipline's crazy logic (e.g. on what can be streamed and
-        # what not - only IO and StringIO). Basically, this replaces ZipGenerator.
-        def each(&block)
-          fake_stream = Zipline::FakeStream.new(&block)
-          Zipline::OutputStream.open(fake_stream) do |zip|
-            @pkg.instance_variable_get(:@parts).each do |name, _|
-              part = @pkg.part(name)
-              if part.respond_to?(:stream) && part.respond_to?(:size)
-                zip.put_next_entry name, part.size
-                part.stream zip
-              else
-                data = @pkg.marshal_part(name)
-                zip.put_next_entry name, data.size
-                zip << data
-              end
-            end
-          end
-        end
-      end
-
+      # Stream a ZIP file while it's being generated
+      # The returned PackageStreamer instance has an each method that takes a block, which
+      # is called multiple times with chunks of data.
+      # When adding BinaryParts (e.g. S3ObjectPart or FilePart), these are also
+      # streamed into the ZIP file, so you can e.g. stream objects directly from S3
+      # to the client, encoded in the ZIP file.
+      # Use this e.g. in a Rails controller as `self.response_body`.
       def stream_zip
-        return ZipStreamer.new(self)
+        PackageStreamer.new(self)
       end
 
       def to_zip
