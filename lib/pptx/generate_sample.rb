@@ -24,6 +24,20 @@ def main
   pkg.presentation.add_slide(slide)
 
   slide2 = PPTX::Slide.new(pkg)
+  slide2.add_textbox([2*PPTX::CM, 1*PPTX::CM, 22*PPTX::CM, 3*PPTX::CM],
+                    'Very long title that should be broken up into multiple' +
+                    'lines and possibly clipped', sz: 45*PPTX::POINT)
+  slide2.add_textbox [14*PPTX::CM, 6*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM],
+                     "Text box text with long text that should be broken " +
+                     "up into multiple lines and should overflow overflow" +
+                     " overflowoverflowoverflowoverflowoverflowoverflow" +
+                     " overflow overflow overflow overflow overflow overflow" +
+                     " overflow overflow overflow overflow overflow overflow" +
+                     " overflow overflow overflow overflow overflow overflow" +
+                     " overflow overflow overflow overflow overflow overflow" +
+                     " overflow overflow overflow overflow overflow overflow" +
+                     " overflow overflow overflow overflow overflow overflow" +
+                     " overflow overflow overflow overflow overflow overflow"
   pkg.presentation.add_slide(slide2)
 
   File.open('tmp/generated.pptx', 'wb') {|f| f.write(pkg.to_zip) }
