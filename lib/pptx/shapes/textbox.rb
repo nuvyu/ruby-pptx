@@ -20,7 +20,7 @@ module PPTX
               <p:spPr>
               </p:spPr>
               <p:txBody>
-                  <a:bodyPr rtlCol='0' wrap='none'>
+                  <a:bodyPr rtlCol='0' wrap='square'>
                       <a:spAutoFit/>
                   </a:bodyPr>
                   <a:lstStyle/>
