@@ -11,14 +11,12 @@ describe 'PPTX' do
       pkg = PPTX::OPC::Package.new
       slide = PPTX::Slide.new(pkg)
 
-      slide.add_textbox([14*PPTX::CM, 6*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM],
+      slide.add_textbox(PPTX::cm(14, 6, 10, 10),
                         "Text box text\n:)\nwith<stuff>&to<be>escaped\nYay!")
-      slide.add_textbox([2*PPTX::CM, 1*PPTX::CM, 22*PPTX::CM, 3*PPTX::CM],
-                        'Title :)', sz: 45*PPTX::POINT)
+      slide.add_textbox(PPTX::cm(2, 1, 22, 3), 'Title :)', sz: 45*PPTX::POINT)
 
       image = PPTX::OPC::FilePart.new(pkg, 'spec/fixtures/files/test_photo.jpg')
-      slide.add_picture([2 * PPTX::CM, 5*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM],
-                      'photo.jpg', image)
+      slide.add_picture(PPTX::cm(2, 5, 10, 10), 'photo.jpg', image)
 
       pkg.presentation.add_slide(slide)
 

@@ -11,10 +11,10 @@ def main
   pkg = PPTX::OPC::Package.new
   slide = PPTX::Slide.new(pkg)
 
-  title_dimensions = [2*PPTX::CM, 1*PPTX::CM, 22*PPTX::CM, 2*PPTX::CM]
-  date_dimensions = [2*PPTX::CM, 2.8*PPTX::CM, 5*PPTX::CM, 2*PPTX::CM]
-  text_dimensions = [14*PPTX::CM, 6*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM]
-  image_dimensions = [2 * PPTX::CM, 5*PPTX::CM, 10*PPTX::CM, 10*PPTX::CM]
+  title_dimensions = PPTX::cm(2, 1, 22, 2)
+  date_dimensions = PPTX::cm(2, 2.8, 5, 2)
+  text_dimensions = PPTX::cm(14, 6, 10, 10)
+  image_dimensions = PPTX::cm(2, 5, 10, 10)
 
   slide.add_textbox title_dimensions, 'Title :)', sz: 45*PPTX::POINT
   slide.add_textbox date_dimensions, '18 Feb 2015'
