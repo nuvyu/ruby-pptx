@@ -6,7 +6,7 @@ require 'stringio'
 require 'zip'
 
 describe 'PPTX' do
-  describe 'with two textboxes and an image' do
+  describe 'with two slides' do
     before do
       pkg = PPTX::OPC::Package.new
       slide = PPTX::Slide.new(pkg)
@@ -21,6 +21,7 @@ describe 'PPTX' do
       pkg.presentation.add_slide(slide)
 
       slide2 = PPTX::Slide.new(pkg)
+      slide2.add_textbox(PPTX::cm(14, 6, 10, 10), '')
       pkg.presentation.add_slide(slide2)
 
       @zip_data = pkg.to_zip
@@ -53,7 +54,7 @@ describe 'PPTX' do
       expect(@zip_data.size).to be > 20000
     end
 
-    context 'slide 1' do
+    context '- slide 1 with two textboxes and an image' do
       let(:slide) { Nokogiri::XML(zip_files['ppt/slides/slide1.xml']) }
 
       let(:slide_refs) { Nokogiri::XML(zip_files['ppt/slides/_rels/slide1.xml.rels']) }
@@ -97,6 +98,23 @@ describe 'PPTX' do
 
         image_part = Pathname.new('ppt/slides/').join(image_part_ref).cleanpath.to_s
         expect(zip_files[image_part].size). to be > 0
+      end
+    end
+
+    context '- slide 2 with an empty textbox' do
+      let(:slide) { Nokogiri::XML(zip_files['ppt/slides/slide2.xml']) }
+      let(:shape_tree) do
+        slide.xpath('/p:sld/p:cSld/p:spTree', a:PPTX::DRAWING_NS, p:PPTX::Presentation::NS)
+             .first
+      end
+      let(:textboxes) { shape_tree.xpath('./p:sp/p:txBody') }
+
+      it 'has one textbox' do
+        expect(textboxes.size).to eql(1)
+      end
+
+      it 'has a paragraph in the textbox' do
+        expect(textboxes.first.xpath('./a:p').size).to eq 1
       end
     end
 

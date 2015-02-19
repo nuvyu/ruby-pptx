@@ -38,6 +38,11 @@ module PPTX
           txbody.add_child paragraph
         end
 
+        # txBody always needs a paragraph
+        unless txbody.xpath('./a:p', a: DRAWING_NS).size >= 1
+          txbody.add_child empty_paragraph
+        end
+
         base_node
       end
 
@@ -56,6 +61,13 @@ module PPTX
           tn = node.xpath('./a:p/a:r/a:t', a: DRAWING_NS).first
           tn.content = line
         end
+      end
+
+      def empty_paragraph
+        paragraph_xml = """
+          <a:p xmlns:a='http://schemas.openxmlformats.org/drawingml/2006/main'></a:p>
+        """
+        Nokogiri::XML::DocumentFragment.parse(paragraph_xml)
       end
 
       # Set text run properties on a given node. Node must already have an rPr element.
