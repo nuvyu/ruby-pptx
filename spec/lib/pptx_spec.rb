@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 require 'pathname'
 require 'pptx'
 require 'stringio'
@@ -15,8 +13,8 @@ describe 'PPTX' do
                         "Text box text\n:)\nwith<stuff>&to<be>escaped\nYay!")
       slide.add_textbox(PPTX::cm(2, 1, 22, 3), 'Title :)', sz: 45*PPTX::POINT)
 
-      image = PPTX::OPC::FilePart.new(pkg, 'spec/fixtures/files/test_photo.jpg')
-      slide.add_picture(PPTX::cm(2, 5, 10, 10), 'photo.jpg', image)
+      image = PPTX::OPC::FilePart.new(pkg, 'spec/fixtures/test_picture.png')
+      slide.add_picture(PPTX::cm(2, 5, 10, 10), 'photo.png', image)
 
       pkg.presentation.add_slide(slide)
 
@@ -94,7 +92,7 @@ describe 'PPTX' do
 
         image_part_ref = rels.first['Target']
         expect(image_part_ref).to start_with('../media/binary-')
-        expect(image_part_ref).to end_with('.jpg')
+        expect(image_part_ref).to end_with('.png')
 
         image_part = Pathname.new('ppt/slides/').join(image_part_ref).cleanpath.to_s
         expect(zip_files[image_part].size). to be > 0
