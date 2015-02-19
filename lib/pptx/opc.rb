@@ -4,6 +4,7 @@ module PPTX
 end
 
 require_relative 'opc/package'
+require_relative 'opc/package_streamer'
 require_relative 'opc/base_part'
 require_relative 'opc/part'
 require_relative 'opc/binary_part'
