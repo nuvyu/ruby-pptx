@@ -1,8 +1,11 @@
 module PPTX
   module OPC
     class PackageStreamer
-      def initialize(package)
+      # Use ignore_part_exceptions to ignore exceptions while marshalling or streaming
+      # a part. Useful to ignore missing files on S3.
+      def initialize(package, ignore_part_exceptions=false)
         @package = package
+        @ignore_part_exceptions = ignore_part_exceptions
       end
 
       # This method uses parts of zipline to implement streaming.
@@ -25,13 +28,17 @@ module PPTX
         fake_stream = Zipline::FakeStream.new(&block)
         Zipline::OutputStream.open(fake_stream) do |zip|
           @package.parts.each do |name, part|
-            if part.respond_to?(:stream) && part.respond_to?(:size)
-              zip.put_next_entry name, part.size
-              part.stream zip
-            else
-              data = @package.marshal_part(name)
-              zip.put_next_entry name, data.size
-              zip << data
+            begin
+              if part.respond_to?(:stream) && part.respond_to?(:size)
+                zip.put_next_entry name, part.size
+                part.stream zip
+              else
+                data = @package.marshal_part(name)
+                zip.put_next_entry name, data.size
+                zip << data
+              end
+            rescue => e
+              raise e unless @ignore_part_exceptions
             end
           end
         end

@@ -85,8 +85,8 @@ module PPTX
       # streamed into the ZIP file, so you can e.g. stream objects directly from S3
       # to the client, encoded in the ZIP file.
       # Use this e.g. in a Rails controller as `self.response_body`.
-      def stream_zip
-        PackageStreamer.new(self)
+      def stream_zip(ignore_part_exceptions=false)
+        PackageStreamer.new(self, ignore_part_exceptions)
       end
 
       def to_zip
