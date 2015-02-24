@@ -72,10 +72,15 @@ module PPTX
 
       # Set text run properties on a given node. Node must already have an rPr element.
       def set_formatting(node, formatting)
+        formatting = formatting.dup
+        color = formatting.delete(:color)
+
         run_properties = node.xpath('.//a:rPr', a: DRAWING_NS).first
         formatting.each do |key, val|
           run_properties[key] = val
         end
+
+        run_properties.add_child build_solid_fill(color) if color
       end
     end
   end

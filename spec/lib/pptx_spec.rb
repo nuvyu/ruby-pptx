@@ -12,6 +12,7 @@ describe 'PPTX' do
       slide.add_textbox(PPTX::cm(14, 6, 10, 10),
                         "Text box text\n:)\nwith<stuff>&to<be>escaped\nYay!")
       slide.add_textbox(PPTX::cm(2, 1, 22, 3), 'Title :)', sz: 45*PPTX::POINT)
+      slide.add_slide_number(PPTX::cm(23.4, 17.5, 1, 0.8), 1, sz: 12*PPTX::POINT, color: '4d4d4d')
 
       image = PPTX::OPC::FilePart.new(pkg, 'spec/fixtures/test_picture.png')
       slide.add_picture(PPTX::cm(2, 5, 10, 10), 'photo.png', image)
@@ -52,7 +53,7 @@ describe 'PPTX' do
       expect(@zip_data.size).to be > 20000
     end
 
-    context '- slide 1 with two textboxes and an image' do
+    context '- slide 1 with two textboxes, an image, and a slide number' do
       let(:slide) { Nokogiri::XML(zip_files['ppt/slides/slide1.xml']) }
 
       let(:slide_refs) { Nokogiri::XML(zip_files['ppt/slides/_rels/slide1.xml.rels']) }
@@ -62,10 +63,10 @@ describe 'PPTX' do
              .first
       end
 
-      it 'contains two textboxes with the correct text' do
+      it 'contains three textboxes with the correct text' do
         textboxes = shape_tree.xpath('./p:sp/p:txBody')
 
-        expect(textboxes.size).to eql(2)
+        expect(textboxes.size).to eql(3)
 
         # Content textbox (first one)
         lines = textboxes[0].xpath('./a:p/a:r/a:t')
@@ -76,6 +77,9 @@ describe 'PPTX' do
 
         # Title textbox (second one)
         expect(textboxes[1].xpath('./a:p/a:r/a:t').first.content).to eql 'Title :)'
+
+        # Slide number
+        expect(textboxes[2].xpath('./a:p/a:fld/a:t').first.content).to eql '1'
       end
 
       it 'contains a reference to an image and the image itself' do
