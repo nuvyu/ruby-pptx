@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://github.com/nuvyu/ruby-pptx'
   # s.license       = 'TODO'
 
+  s.add_runtime_dependency 'nokogiri', '~> 1.6.5'
   s.add_runtime_dependency 'rubyzip', '~> 1.1.2'
   # zipline depends on rails, so only add it as a development dependency
   s.add_development_dependency 'zipline', '~> 0.0.9'
