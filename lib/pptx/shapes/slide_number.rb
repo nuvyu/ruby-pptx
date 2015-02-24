@@ -19,6 +19,7 @@ module PPTX
       def build_paragraph(slidenum)
         paragraph_xml = """
           <a:p xmlns:a='http://schemas.openxmlformats.org/drawingml/2006/main'>
+              <a:pPr/>
               <a:fld id='REPLACE ME' type='slidenum'>
                   <a:rPr lang='en-US' smtClean='0'/>
                   <a:t>REPLACE ME</a:t>

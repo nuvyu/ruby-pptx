@@ -27,7 +27,9 @@ def main
   image = PPTX::OPC::FilePart.new(pkg, 'spec/fixtures/test_picture.png')
   slide.add_picture image_dimensions, 'photo.jpg', image
   slide.add_filled_rectangle(PPTX::cm(24.9, 0, 0.5, 19.05), '558ed5')
-  slide.add_slide_number(PPTX::cm(23.4, 17.5, 1, 0.8), 1, sz: 12*PPTX::POINT, color: '4d4d4d')
+  slide.add_slide_number(PPTX::cm(23.4, 17.5, 1, 0.8), 1, sz: 12*PPTX::POINT,
+                                                          color: '4d4d4d',
+                                                          align: 'r')
 
   pkg.presentation.add_slide(slide)
 

@@ -49,6 +49,7 @@ module PPTX
       def build_paragraph(line)
         paragraph_xml = """
           <a:p xmlns:a='http://schemas.openxmlformats.org/drawingml/2006/main'>
+              <a:pPr/>
               <a:r>
                   <a:rPr lang='en-US' smtClean='0'/>
                   <a:t></a:t>
@@ -70,12 +71,19 @@ module PPTX
         Nokogiri::XML::DocumentFragment.parse(paragraph_xml)
       end
 
-      # Set text run properties on a given node. Node must already have an rPr element.
-      def set_formatting(node, formatting)
+      # Set paragraph and text run properties on a paragraph.
+      # Node must already have pPr and rPr elements.
+      def set_formatting(paragraph, formatting)
         formatting = formatting.dup
         color = formatting.delete(:color)
+        align = formatting.delete(:align)
 
-        run_properties = node.xpath('.//a:rPr', a: DRAWING_NS).first
+        if align
+          p_properties = paragraph.xpath('./a:p/a:pPr', a: DRAWING_NS).first
+          p_properties['algn'] = align
+        end
+
+        run_properties = paragraph.xpath('.//a:rPr', a: DRAWING_NS).first
         formatting.each do |key, val|
           run_properties[key] = val
         end
