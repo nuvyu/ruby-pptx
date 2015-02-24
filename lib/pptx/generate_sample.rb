@@ -11,6 +11,8 @@ def main
   pkg = PPTX::OPC::Package.new
   slide = PPTX::Slide.new(pkg)
 
+  # slide size: 25.4cm x 19.05
+
   title_dimensions = PPTX::cm(2, 1, 22, 2)
   date_dimensions = PPTX::cm(2, 2.8, 5, 2)
   text_dimensions = PPTX::cm(14, 6, 10, 10)
@@ -22,8 +24,9 @@ def main
                     "Text box text with long text that should be broken " +
                     "down into multiple lines.\n:)\nwith<stuff>&to<be>escaped\nYay!"
 
-  image = PPTX::OPC::FilePart.new(pkg, 'spec/fixtures/files/test_photo.jpg')
+  image = PPTX::OPC::FilePart.new(pkg, 'spec/fixtures/test_picture.png')
   slide.add_picture image_dimensions, 'photo.jpg', image
+  slide.add_filled_rectangle(PPTX::cm(24.9, 0, 0.5, 19.05), '558ed5')
 
   pkg.presentation.add_slide(slide)
 

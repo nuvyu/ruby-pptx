@@ -34,6 +34,13 @@ module PPTX
       'application/vnd.openxmlformats-officedocument.presentationml.slide+xml'
     end
 
+    # Add rectangle filled with given color.
+    # Give color in RGB hex format (e.g. '558ed5')
+    def add_filled_rectangle(transform, color)
+      shape = Shapes::FilledRectangle.new(transform, color)
+      shape_tree_xml.add_child(shape.build_node)
+    end
+
     def add_picture(transform, name, image)
       # TODO do something with name or remove
       rid = relationships.add(relative_part_name(image.part_name), PPTX::RELTYPE_IMAGE)
