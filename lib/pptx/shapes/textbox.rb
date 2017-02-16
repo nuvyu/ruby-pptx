@@ -2,7 +2,7 @@ module PPTX
   module Shapes
     class Textbox < Shape
       def initialize(transform, content, formatting={})
-        super(transform)
+        super(transform, extract_shape_properties(formatting))
         @content = content
         @formatting = formatting
       end

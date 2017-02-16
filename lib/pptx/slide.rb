@@ -57,9 +57,10 @@ module PPTX
     # * sz: font size (use PPTX::POINT)
     # * b: 1 for bold
     # * i: 1 for italic
-    # There are two custom properties:
+    # There are three custom properties:
     # * color: aabbcc (hex RGB color)
     # * align: ctr|dist|just|justLow|l|r|thaiDist (ST_TextAlignType (Text Alignment Types))
+    # * bg: aabbcc (hex RGB color)
     def add_textbox(transform, content, formatting={})
       shape = Shapes::Textbox.new(transform, content, formatting)
       shape_tree_xml.add_child(shape.build_node)

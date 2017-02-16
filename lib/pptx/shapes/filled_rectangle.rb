@@ -1,9 +1,8 @@
 module PPTX
   module Shapes
     class FilledRectangle < Shape
-      def initialize(transform, color)
-        super(transform)
-        @color = color
+      def initialize(transform, formatting={})
+        super(transform, extract_shape_properties(formatting))
       end
 
       def base_xml
@@ -23,9 +22,7 @@ module PPTX
       end
 
       def build_node
-        base_node.tap do |node|
-          node.xpath('.//p:spPr', p: Presentation::NS).first.add_child build_solid_fill @color
-        end
+        base_node
       end
     end
   end
